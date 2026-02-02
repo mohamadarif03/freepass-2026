@@ -2,10 +2,30 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Contracts\Interfaces\AuthInterface;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Helpers\ResponseHelper;
+use Illuminate\Http\Response as ResponseCode;
 
 class RegisterController extends Controller
 {
-    
+    private AuthInterface $auth;
+
+    public function __construct(AuthInterface $auth)
+    {
+        $this->auth = $auth;
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        $user = $this->auth->store($request->validated());
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return ResponseHelper::success([
+            'user' => $user,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ], "User registered successfully", ResponseCode::HTTP_CREATED);
+    }
 }
