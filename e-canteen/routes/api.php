@@ -12,12 +12,19 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
 
+use App\Http\Controllers\TransactionController;
+
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/transaction', [TransactionController::class, 'create']);
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::get('/canteen', [CanteenController::class, 'index']);
     Route::get('/menu/{canteen}', [CanteenController::class, 'show']);
-    Route::get('/payment-channel', [CheckoutController::class, 'index']);
+
+    Route::middleware('user')->group(function () {
+        Route::get('/payment-channel', [CheckoutController::class, 'index']);
+        Route::post('/transaction', [TransactionController::class, 'create']);
+    });
 
     Route::middleware('canteen')->group(function () {
         Route::apiResource('menu', MenuController::class);
