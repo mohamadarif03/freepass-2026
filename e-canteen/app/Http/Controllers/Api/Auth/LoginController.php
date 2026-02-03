@@ -28,4 +28,10 @@ class LoginController extends Controller
             'token_type' => 'Bearer',
         ], "User logged in successfully", Response::HTTP_OK);
     }
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return ResponseHelper::success(null, "User logged out successfully", Response::HTTP_OK);
+    }
 }

@@ -18,6 +18,7 @@ Route::post('/callback', [\App\Http\Controllers\Api\CallbackController::class, '
 use App\Http\Controllers\Api\TransactionController;
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout']);
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::put('/profile', [ProfileController::class, 'update']);
 
