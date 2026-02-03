@@ -1,19 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
-use App\Contracts\Interfaces\CanteenInterface;
 use App\Contracts\Interfaces\CanteenOwnerInterface;
-use App\Enums\RoleEnum;
 use App\Helpers\ResponseHelper;
-use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CanteenOwnerRequest;
 use App\Http\Resources\CanteenOwnerResource;
 use App\Models\User;
 use App\Service\CanteenOwnerService;
 use App\Traits\PaginationTrait;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 
 class CanteenOwnerController extends Controller

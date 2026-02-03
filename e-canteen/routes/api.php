@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\MenuController;
-use App\Http\Controllers\Auth\CanteenOwnerController;
+use App\Http\Controllers\Api\Auth\CanteenOwnerController;   
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterController::class, 'register']);
@@ -19,7 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::middleware('admin')->group(function () {
-        //kak ini aku ga pake route resource, karena aku mau melakukan model binding yang dimana nama modelku user. (hehe klarif kak)
         Route::get('canteen-owner', [CanteenOwnerController::class, 'index']);
         Route::post('canteen-owner', [CanteenOwnerController::class, 'store']);
         Route::put('canteen-owner/{user}', [CanteenOwnerController::class, 'update']);
