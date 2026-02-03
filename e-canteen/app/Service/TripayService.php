@@ -57,4 +57,36 @@ class TripayService
 
         return $response->json();
     }
+
+    public function handleCallback($request)
+    {
+        $callbackSignature = $request->header('X-Callback-Signature');
+        $json = $request->getContent();
+        $signature = hash_hmac('sha256', $json, $this->privateKey);
+
+        if ($signature !== (string) $callbackSignature) {
+            return ['success' => false, 'message' => 'Invalid signature'];
+        }
+
+        $data = json_decode($json);
+        $uniqueRef = $data->merchant_ref;
+        $status = strtoupper((string) $data->status);
+
+        if ($data->is_closed_payment === 1) {
+            $transactionStatus = match ($status) {
+                'PAID' => 'paid',
+                'EXPIRED' => 'unpaid',
+                'FAILED' => 'unpaid',
+                'UNPAID' => 'unpaid',
+                default => 'unpaid',
+            };
+
+            return [
+                'success' => true,
+                'merchant_ref' => $uniqueRef,
+                'status_payment' => $transactionStatus
+            ];
+        }
+        return ['success' => false, 'message' => 'Not a closed payment'];
+    }
 }

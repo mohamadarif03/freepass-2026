@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/callback', [\App\Http\Controllers\Api\CallbackController::class, 'handle']);
 
 use App\Http\Controllers\Api\TransactionController;
 

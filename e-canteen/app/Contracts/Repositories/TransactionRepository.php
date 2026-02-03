@@ -36,4 +36,14 @@ class TransactionRepository extends BaseRepository implements TransactionInterfa
             return $transaction;
         });
     }
+
+    public function update(mixed $id, array $data): mixed
+    {
+        return $this->model->find($id)->update($data);
+    }
+
+    public function getByReference(string $reference): mixed
+    {
+        return $this->model->where('merchant_ref', $reference)->first();
+    }
 }

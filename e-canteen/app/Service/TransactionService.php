@@ -31,7 +31,7 @@ class TransactionService
 
         foreach ($data['menus'] as $item) {
             $menu = $this->menuRepository->getById($item['menu_id']);
-            $price = $menu->price; 
+            $price = $menu->price;
             $quantity = $item['quantity'];
             $subtotal = $price * $quantity;
             $totalAmount += $subtotal;
@@ -69,6 +69,12 @@ class TransactionService
                     $user
                 );
 
+                if (isset($tripayResponse['data']['merchant_ref'])) {
+                    $this->transactionRepository->update($transaction->id, [
+                        'merchant_ref' => $tripayResponse['data']['merchant_ref']
+                    ]);
+                }
+
                 return [
                     'transaction' => $transaction,
                     'tripay' => $tripayResponse,
@@ -79,5 +85,35 @@ class TransactionService
         }
 
         return ['transaction' => $transaction];
+    }
+    
+    public function handleCallback(array $tripayData)
+    {
+        $transaction = $this->transactionRepository->getByReference($tripayData['merchant_ref']);
+
+        if (!$transaction) {
+            return ['success' => false, 'message' => 'Transaction not found'];
+        }
+
+        if ($transaction->status_payment === $tripayData['status_payment']) {
+            return ['success' => true, 'message' => 'Transaction already processed'];
+        }
+
+        if ($tripayData['status_payment'] === 'paid' && $transaction->status_payment !== 'paid') {
+            foreach ($transaction->menus as $menuTransaction) {
+                $menu = $this->menuRepository->getById($menuTransaction->menu_id);
+                if ($menu) {
+                    $this->menuRepository->update($menu->id, [
+                        'stock' => $menu->stock - $menuTransaction->quantity
+                    ]);
+                }
+            }
+        }
+
+        $this->transactionRepository->update($transaction->id, [
+            'status_payment' => $tripayData['status_payment']
+        ]);
+
+        return ['success' => true, 'message' => 'Transaction updated successfully'];
     }
 }

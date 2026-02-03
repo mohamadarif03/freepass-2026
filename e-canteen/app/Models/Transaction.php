@@ -11,7 +11,8 @@ class Transaction extends Model
         'payment_method',
         'status_payment',
         'status',
-        'total_amount'
+        'total_amount',
+        'merchant_ref'
     ];
 
     public function menus()
