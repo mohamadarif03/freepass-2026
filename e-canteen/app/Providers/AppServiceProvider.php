@@ -6,11 +6,13 @@ use App\Contracts\Interfaces\AuthInterface;
 use App\Contracts\Interfaces\CanteenInterface;
 use App\Contracts\Interfaces\CanteenOwnerInterface;
 use App\Contracts\Interfaces\MenuInterface;
+use App\Contracts\Interfaces\OrderInterface;
 use App\Contracts\Interfaces\TransactionInterface;
 use App\Contracts\Repositories\AuthRepository;
 use App\Contracts\Repositories\CanteenOwnerRepository;
 use App\Contracts\Repositories\CanteenRepository;
 use App\Contracts\Repositories\MenuRepository;
+use App\Contracts\Repositories\OrderRepository;
 use App\Contracts\Repositories\TransactionRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         CanteenOwnerInterface::class => CanteenOwnerRepository::class,
         CanteenInterface::class => CanteenRepository::class,
         TransactionInterface::class => TransactionRepository::class,
+        OrderInterface::class => OrderRepository::class,
     ];
 
     public function register(): void

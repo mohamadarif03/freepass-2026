@@ -52,7 +52,7 @@ class TransactionService
         $transactionData = [
             'user_id' => $user->id,
             'payment_method' => $data['payment_method'] === 'cash' ? 'cash' : 'digital',
-            'status_payment' => 'pending',
+            'status_payment' => 'unpaid',
             'status' => 'pending',
             'total_amount' => $totalAmount,
             'menus' => $menuData

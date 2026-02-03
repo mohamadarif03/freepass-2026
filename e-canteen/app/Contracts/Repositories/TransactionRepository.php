@@ -20,7 +20,7 @@ class TransactionRepository extends BaseRepository implements TransactionInterfa
             $transaction = $this->model->create([
                 'user_id' => $data['user_id'],
                 'payment_method' => $data['payment_method'],
-                'status_payment' => $data['status_payment'] ?? 'pending',
+                'status_payment' => $data['status_payment'] ?? 'unpaid',
                 'status' => $data['status'] ?? 'pending',
                 'total_amount' => $data['total_amount'],
             ]);

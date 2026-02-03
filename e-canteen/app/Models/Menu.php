@@ -25,4 +25,8 @@ class Menu extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function canteen(): BelongsTo
+    {
+        return $this->belongsTo(Canteen::class);
+    }
 }

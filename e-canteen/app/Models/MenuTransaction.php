@@ -11,4 +11,8 @@ class MenuTransaction extends Model
         'menu_id',
         'quantity'
     ];
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class);
+    }
 }
