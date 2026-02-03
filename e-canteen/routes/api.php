@@ -18,22 +18,25 @@ use App\Http\Controllers\Api\TransactionController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::put('/profile', [ProfileController::class, 'update']);
-    
-    Route::middleware('user')->group(function () {
+
+    Route::middleware('role:user')->group(function () {
         Route::get('/canteen', [CanteenController::class, 'index']);
         Route::get('/menu/{canteen}', [CanteenController::class, 'show']);
         Route::get('/payment-channel', [CheckoutController::class, 'index']);
         Route::post('/transaction', [TransactionController::class, 'create']);
     });
 
-    Route::middleware('canteen')->group(function () {
-        Route::apiResource('/menu', MenuController::class);
+    Route::middleware('role:user,canteen')->group(function () {
         Route::get('/orders', [OrderController::class, 'index']);
-        Route::patch('/orders-status-payment/{transaction}', [OrderController::class, 'updateStatusPayment']);   
-        Route::patch('/orders-status/{transaction}', [OrderController::class, 'UpdateStatus']);   
     });
 
-    Route::middleware('admin')->group(function () {
+    Route::middleware('role:canteen')->group(function () {
+        Route::apiResource('/menu', MenuController::class);
+        Route::patch('/orders-status-payment/{transaction}', [OrderController::class, 'updateStatusPayment']);
+        Route::patch('/orders-status/{transaction}', [OrderController::class, 'UpdateStatus']);
+    });
+
+    Route::middleware('role:admin')->group(function () {
         Route::get('/canteen-owner', [CanteenOwnerController::class, 'index']);
         Route::post('/canteen-owner', [CanteenOwnerController::class, 'store']);
         Route::put('/canteen-owner/{user}', [CanteenOwnerController::class, 'update']);
