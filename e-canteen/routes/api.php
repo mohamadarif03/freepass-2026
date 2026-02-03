@@ -14,11 +14,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::put('/profile', [ProfileController::class, 'update']);
 
-    // Route::middleware('canteen')->group(function () {
+    Route::middleware('canteen')->group(function () {
         Route::apiResource('menu', MenuController::class);
-    // });
-    
+    });
+
     Route::middleware('admin')->group(function () {
-        Route::apiResource('canteen-owner', CanteenOwnerController::class);
+        //kak ini aku ga pake route resource, karena aku mau melakukan model binding yang dimana nama modelku user. (hehe klarif kak)
+        Route::get('canteen-owner', [CanteenOwnerController::class, 'index']);
+        Route::post('canteen-owner', [CanteenOwnerController::class, 'store']);
+        Route::put('canteen-owner/{user}', [CanteenOwnerController::class, 'update']);
+        Route::delete('canteen-owner/{user}', [CanteenOwnerController::class, 'destroy']);
     });
 });

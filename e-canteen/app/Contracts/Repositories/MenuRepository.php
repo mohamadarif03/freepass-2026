@@ -7,6 +7,7 @@ use App\Contracts\Repositories\BaseRepository;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 
 class MenuRepository extends BaseRepository implements MenuInterface
 {
@@ -36,6 +37,7 @@ class MenuRepository extends BaseRepository implements MenuInterface
             ->when($request->name, function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->name . '%');
             })
+            ->where('user_id', Auth::id())
             ->paginate($pagination);
     }
 
