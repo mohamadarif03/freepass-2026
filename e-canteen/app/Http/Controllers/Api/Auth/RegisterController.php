@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Contracts\Interfaces\AuthInterface;
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Helpers\ResponseHelper;
@@ -19,7 +20,9 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $user = $this->auth->store($request->validated());
+        $data = $request->validated();
+        $data['role'] = RoleEnum::USER->value;
+        $user = $this->auth->store($data);
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return ResponseHelper::success([
