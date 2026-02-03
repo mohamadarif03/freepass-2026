@@ -41,6 +41,16 @@ class MenuRepository extends BaseRepository implements MenuInterface
             ->paginate($pagination);
     }
 
+    public function getByCanteenId(Request $request, int $canteenId): mixed
+    {
+        return $this->model->query()
+            ->when($request->name, function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->where('canteen_id', $canteenId)
+            ->paginate(10);
+    }
+
     public function delete(mixed $id): mixed
     {
         return $this->model->findOrFail($id)->delete();
