@@ -31,6 +31,11 @@ class TransactionService
 
         foreach ($data['menus'] as $item) {
             $menu = $this->menuRepository->getById($item['menu_id']);
+
+            if ($menu->stock < $item['quantity']) {
+                throw new Exception("Stock for menu '{$menu->name}' is insufficient. Available: {$menu->stock}, Requested: {$item['quantity']}");
+            }
+
             $price = $menu->price;
             $quantity = $item['quantity'];
             $subtotal = $price * $quantity;
@@ -86,10 +91,11 @@ class TransactionService
 
         return ['transaction' => $transaction];
     }
-    
+
     public function handleCallback(array $tripayData)
     {
         $transaction = $this->transactionRepository->getByReference($tripayData['merchant_ref']);
+
 
         if (!$transaction) {
             return ['success' => false, 'message' => 'Transaction not found'];

@@ -26,15 +26,15 @@ class CallbackController extends Controller
         $result = $this->tripayService->handleCallback($request);
 
         if (!$result['success']) {
-            return response()->json(['success' => false, 'message' => $result['message']], 400);
+            return ResponseHelper::error(null, $result['message'], 400);
         }
 
         $processResult = $this->transactionService->handleCallback($result);
 
         if (!$processResult['success']) {
-            return response()->json(['success' => false, 'message' => $processResult['message']], 400);
+            return ResponseHelper::error(null, $processResult['message'], 400);
         }
 
-        return response()->json(['success' => true]);
+        return ResponseHelper::success(null, 'Callback processed successfully');
     }
 }
