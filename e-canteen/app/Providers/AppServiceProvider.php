@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\Interfaces\AuthInterface;
+use App\Contracts\Interfaces\MenuInterface;
 use App\Contracts\Repositories\AuthRepository;
+use App\Contracts\Repositories\MenuRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,6 +13,7 @@ class AppServiceProvider extends ServiceProvider
 
     public array $bindings = [
         AuthInterface::class => AuthRepository::class,
+        MenuInterface::class => MenuRepository::class,
     ];
 
     public function register(): void
