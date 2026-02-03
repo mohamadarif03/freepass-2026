@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateStatusOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Transaction;
+use App\Service\TransactionService;
+use App\Service\TripayService;
 use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
 
@@ -15,10 +17,12 @@ class OrderController extends Controller
 {
     use PaginationTrait;
     private OrderInterface $orderInterface;
+    private TransactionService $transactionService;
 
-    public function __construct(OrderInterface $orderInterface)
+    public function __construct(OrderInterface $orderInterface, TransactionService $transactionService)
     {
         $this->orderInterface = $orderInterface;
+        $this->transactionService = $transactionService;
     }
 
     public function index(Request $request)
@@ -34,15 +38,23 @@ class OrderController extends Controller
         $data = [
             'status_payment' => 'paid'
         ];
-        $order = $this->orderInterface->update($transaction->id, $data);
+        $result = [
+            'status_payment' => 'paid',
+            'merchant_ref' => $transaction->merchant_ref
+        ];
+        $this->transactionService->handleCallback($result);
+
+        $this->orderInterface->update($transaction->id, $data);
         return ResponseHelper::success(OrderResource::make($transaction->refresh()), 'Status Payment Order updated successfully');
     }
 
-    public function updateStatus(UpdateStatusOrderRequest $request, Transaction $transaction) {
+    public function updateStatus(UpdateStatusOrderRequest $request, Transaction $transaction)
+    {
         $data = [
             'status' => $request->status
         ];
-        $order = $this->orderInterface->update($transaction->id, $data);
+
+        $this->orderInterface->update($transaction->id, $data);
         return ResponseHelper::success(OrderResource::make($transaction->refresh()), 'Status Order updated successfully');
     }
 }
