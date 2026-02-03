@@ -39,6 +39,7 @@ class CanteenOwnerRepository extends BaseRepository implements CanteenOwnerInter
                 $query->where('name', 'like', '%' . $request->name . '%');
             })
             ->where('role', RoleEnum::CANTEEN->value)
+            ->whereNull('deleted_at')
             ->paginate($pagination);
     }
 

@@ -28,6 +28,8 @@ class CanteenOwnerRequest extends ApiRequest
                 'email',
                 Rule::unique('users', 'email')->ignore($this->route('user')),
             ],
+            'canteen_name' => 'required|string|max:255',
+            'canteen_location' => 'required|string|max:255',
         ];
     }
 }

@@ -2,24 +2,30 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\Interfaces\CanteenInterface;
 use App\Contracts\Interfaces\CanteenOwnerInterface;
 use App\Enums\RoleEnum;
 use App\Helpers\ResponseHelper;
+use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CanteenOwnerRequest;
 use App\Http\Resources\CanteenOwnerResource;
 use App\Models\User;
+use App\Service\CanteenOwnerService;
 use App\Traits\PaginationTrait;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 
 class CanteenOwnerController extends Controller
 {
     use PaginationTrait;
     private CanteenOwnerInterface $canteenOwner;
+    private CanteenOwnerService $canteenOwnerService;
 
-    public function __construct(CanteenOwnerInterface $canteenOwner)
+    public function __construct(CanteenOwnerInterface $canteenOwner, CanteenOwnerService $canteenOwnerService)
     {
         $this->canteenOwner = $canteenOwner;
+        $this->canteenOwnerService = $canteenOwnerService;
     }
 
     public function index(Request $request)
@@ -32,23 +38,21 @@ class CanteenOwnerController extends Controller
 
     public function store(CanteenOwnerRequest $request)
     {
-        $data = $request->validated();
-        $data['password'] = bcrypt('password');
-        $data['role'] = RoleEnum::CANTEEN->value;
-        $canteenOwner = $this->canteenOwner->store($data);
+        $canteenOwner = $this->canteenOwnerService->handleStore($request, $this->canteenOwner);
+
         return ResponseHelper::success(CanteenOwnerResource::make($canteenOwner), 'Canteen owner created successfully');
     }
 
     public function update(CanteenOwnerRequest $request, User $user)
     {
-        $data = $request->validated();
-        $this->canteenOwner->update($user->id, $data);
-        return ResponseHelper::success(CanteenOwnerResource::make($user->refresh()), 'Canteen owner updated successfully');
+       $canteenOwner = $this->canteenOwnerService->handleUpdate($request, $this->canteenOwner, $user->id);
+        return ResponseHelper::success(CanteenOwnerResource::make($canteenOwner), 'Canteen owner updated successfully');
     }
 
     public function destroy(User $user)
     {
         $this->canteenOwner->delete($user->id);
+        $user->canteen()->delete();
         return ResponseHelper::success(null, 'Canteen owner deleted successfully');
     }
 }
