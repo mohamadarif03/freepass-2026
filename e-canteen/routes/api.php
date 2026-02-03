@@ -26,11 +26,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/payment-channel', [CheckoutController::class, 'index']);
 
         Route::post('/transaction', [TransactionController::class, 'create']);
-        Route::apiResource('/reviews', ReviewController::class);
+        Route::apiResource('/reviews', ReviewController::class)->except('destroy');
     });
 
     Route::middleware('role:user,canteen')->group(function () {
         Route::get('/orders', [OrderController::class, 'index']);
+        Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
     });
 
     Route::middleware('role:canteen')->group(function () {
