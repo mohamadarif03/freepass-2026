@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Auth\CanteenOwnerController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterController::class, 'register']);
@@ -17,4 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('menu', MenuController::class);
     // });
     
+    Route::middleware('admin')->group(function () {
+        Route::apiResource('canteen-owner', CanteenOwnerController::class);
+    });
 });

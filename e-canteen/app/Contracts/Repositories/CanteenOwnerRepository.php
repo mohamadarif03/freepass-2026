@@ -2,17 +2,19 @@
 
 namespace App\Contracts\Repositories;
 
-use App\Contracts\Interfaces\MenuInterface;
+use App\Contracts\Interfaces\CanteenOwnerInterface;
 use App\Contracts\Repositories\BaseRepository;
-use App\Models\Menu;
+use App\Enums\RoleEnum;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class MenuRepository extends BaseRepository implements MenuInterface
+class CanteenOwnerRepository extends BaseRepository implements CanteenOwnerInterface
+
 {
-    public function __construct(Menu $menu)
+    public function __construct(User $user)
     {
-        $this->model = $menu;
+        $this->model = $user;
     }
 
     public function getById(mixed $id): mixed
@@ -36,6 +38,7 @@ class MenuRepository extends BaseRepository implements MenuInterface
             ->when($request->name, function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->name . '%');
             })
+            ->where('role', RoleEnum::CANTEEN->value)
             ->paginate($pagination);
     }
 
