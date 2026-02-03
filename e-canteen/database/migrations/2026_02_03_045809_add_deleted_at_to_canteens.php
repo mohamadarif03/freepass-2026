@@ -14,10 +14,6 @@ return new class extends Migration
         Schema::table('canteens', function (Blueprint $table) {
             $table->softDeletes();
         });
-
-        Schema::table('menus', function (Blueprint $table) {
-            $table->softDeletes();
-        });
     }
 
     /**
@@ -26,10 +22,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('canteens', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-        });
-
-        Schema::table('menus', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
     }

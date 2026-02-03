@@ -9,13 +9,7 @@ class UserHelper
 
     public static function getUserRole(): string
     {
-        return Auth::user()->roles->pluck('name')[0];
-    }
-
-
-    public static function getUserId(): string
-    {
-        return Auth::user()->id;
+        return Auth::user()->role;
     }
 
 
@@ -30,9 +24,4 @@ class UserHelper
         return Auth::user()->email;
     }
 
-
-    public static function getUserPhoto(): string|null
-    {
-        return Auth::user()->photo;
-    }
 }

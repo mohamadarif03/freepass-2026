@@ -11,6 +11,7 @@ class Menu extends Model
 {
     use SoftDeletes;
     protected $fillable = [
+        'canteen_id',
         'user_id',
         'name',
         'slug',

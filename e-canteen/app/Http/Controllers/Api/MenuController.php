@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\Interfaces\MenuInterface;
 use App\Helpers\ResponseHelper;
+use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MenuRequest;
 use App\Http\Requests\MenuUpdateRequest;
@@ -12,6 +13,7 @@ use App\Models\Menu;
 use App\Service\MenuService;
 use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
@@ -36,6 +38,8 @@ class MenuController extends Controller
     public function store(MenuRequest $request)
     {
         $data = $this->menuService->handleStore($request);
+        $data['canteen_id'] = Auth::user()->canteen->id;
+       
         $data = $this->menu->store($data);
         return ResponseHelper::success(MenuResource::make($data), 'Menu created successfully');
     }
