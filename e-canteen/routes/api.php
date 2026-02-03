@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('canteen')->group(function () {
         Route::apiResource('/menu', MenuController::class);
         Route::get('/orders', [OrderController::class, 'index']);
+        Route::patch('/orders-status-payment/{transaction}', [OrderController::class, 'updateStatusPayment']);   
+        Route::patch('/orders-status/{transaction}', [OrderController::class, 'UpdateStatus']);   
     });
 
     Route::middleware('admin')->group(function () {

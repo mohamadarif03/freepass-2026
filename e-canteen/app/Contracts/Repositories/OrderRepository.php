@@ -32,4 +32,9 @@ class OrderRepository extends BaseRepository implements OrderInterface
             })
             ->paginate($pagination);
     }
+    
+    public function update(mixed $id, array $data): mixed
+    {
+        return $this->model->findOrFail($id)->update($data);
+    }
 }
